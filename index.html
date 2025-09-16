@@ -1,0 +1,111 @@
+تمام يا نايف! خليني أجهز لك نموذج أولي لموقع اختبار تحديد المستوى في اللغة الإنجليزية، مكتوب بلغة HTML وJavaScript، ويحتوي على:
+- صفحة ترحيبية
+- اختبار تفاعلي من A1 إلى C2
+- تغيير الأسئلة حسب التقدم
+- رسالة تحفيزية حسب المستوى
+- رابط لقناتك HippoEng
+
+🧾 الكود الكامل للموقع (HTML + CSS + JavaScript)
+يمكنك نسخه ولصقه في محرر مثل Visual Studio Code أو CodePen لتجربته مباشرة:
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار تحديد المستوى - HippoEng</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; background: #f0f0f0; text-align: center; padding: 20px; }
+    .container { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
+    h1 { color: #2c3e50; }
+    button { padding: 10px 20px; margin-top: 10px; font-size: 16px; }
+    .question { margin: 20px 0; }
+    .result { font-weight: bold; margin-top: 20px; }
+    a { color: #2980b9; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>اختبار تحديد المستوى في اللغة الإنجليزية</h1>
+    <p>اكتشف مستواك الحقيقي من A1 إلى C2 وتعلّم حسب مستواك مع قناة <a href="https://www.youtube.com/@HippoEng" target="_blank">HippoEng</a></p>
+    <div id="quiz"></div>
+    <button onclick="nextQuestion()">التالي</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { level: "A1", q: "What is the meaning of 'مرحبا'?", options: ["Goodbye", "Please", "Hello", "Thanks"], answer: 2 },
+      { level: "A1", q: "Choose the correct sentence:", options: ["She goes to school.", "She going to school.", "She gone to school.", "She go to school."], answer: 0 },
+      { level: "A2", q: "Which word is a noun?", options: ["Quickly", "Run", "Happiness", "Very"], answer: 2 },
+      { level: "A2", q: "Complete: I _____ a book yesterday.", options: ["read", "reads", "reading", "readed"], answer: 0 },
+      { level: "B1", q: "Which sentence is in present continuous?", options: ["I am eating breakfast.", "I ate breakfast.", "I eat breakfast.", "I will eat breakfast."], answer: 0 },
+      { level: "B1", q: "Choose the correct question form:", options: ["Happy you are?", "Is happy you?", "You are happy?", "Are you happy?"], answer: 3 },
+      { level: "B2", q: "Which word is an adjective?", options: ["Running", "Quickly", "Run", "Quick"], answer: 3 },
+      { level: "B2", q: "Synonym of 'big'?", options: ["Small", "Little", "Tiny", "Huge"], answer: 3 },
+      { level: "C1", q: "Which sentence uses future tense?", options: ["I eat lunch.", "I will eat lunch.", "I am eating lunch.", "I ate lunch."], answer: 1 },
+      { level: "C1", q: "Choose passive voice:", options: ["John is eating the cake.", "John eats the cake.", "The cake eats by John.", "The cake is eaten by John."], answer: 3 },
+      { level: "C2", q: "Correct conditional sentence:", options: ["If I will see him, I tell him.", "If I see him, I will tell him.", "If I see him, I told him.", "If I saw him, I will tell him."], answer: 1 },
+      { level: "C2", q: "Sentence with relative clause:", options: ["I like pizza.", "He runs fast.", "The book that I read was interesting.", "She is my friend."], answer: 2 }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const q = questions[current];
+      let html = `<div class="question"><h3>${q.q}</h3>`;
+      q.options.forEach((opt, i) => {
+        html += `<div><input type="radio" name="opt" value="${i}"> ${opt}</div>`;
+      });
+      html += `</div>`;
+      document.getElementById("quiz").innerHTML = html;
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector('input[name="opt"]:checked');
+      if (!selected) return alert("اختر إجابة أولاً");
+      if (parseInt(selected.value) === questions[current].answer) score++;
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      let level = "";
+      if (score <= 2) level = "A1";
+      else if (score <= 4) level = "A2";
+      else if (score <= 6) level = "B1";
+      else if (score <= 8) level = "B2";
+      else if (score <= 10) level = "C1";
+      else level = "C2";
+
+      const advice = {
+        A1: "👶 أنت في بداية الطريق! استمر في التعلم يوميًا، وابدأ بمقاطع HippoEng للمبتدئين.",
+        A2: "🌱 تقدمك رائع! ركّز على المحادثات اليومية وتعلم المفردات الجديدة.",
+        B1: "🚀 أنت الآن في المستوى المتوسط! حاول مشاهدة مقاطع بدون ترجمة لتقوية الفهم.",
+        B2: "💪 مستواك جيد جدًا! ابدأ بقراءة مقالات ومشاهدة أفلام إنجليزية لفهم السياق.",
+        C1: "🧠 ممتاز! أنت قريب من الطلاقة. مارس الكتابة والتحدث بطلاقة يوميًا.",
+        C2: "🏆 أنت محترف! استمر في صقل مهاراتك عبر التدريس أو الترجمة أو المحتوى المتقدم."
+      };
+
+      document.getElementById("quiz").innerHTML = "";
+      document.getElementById("result").innerHTML = `✅ مستواك هو: <strong>${level}</strong><br>${advice[level]}<br><br>
+      📺 <a href="https://www.youtube.com/@HippoEng" target="_blank">شاهد دروس حسب مستواك على HippoEng</a>`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
+
+
+
+🚀 ماذا تفعل الآن؟
+- انسخ الكود أعلاه.
+- افتح محرر مثل CodePen أو JSFiddle أو حتى ملف .html على جهازك.
+- الصق الكود وشغّله.
+- شاركه مع طلابك أو أضفه إلى موقعك الشخصي.
+
+هل ترغب أن أساعدك في رفعه على استضافة مجانية مثل GitHub Pages أو Netlify؟ أقدر أجهز لك الخطوات بالتفصيل. فقط قل لي كيف تحب تكمل.
